@@ -12,17 +12,35 @@ angular.module('tapsterApp')
     var last10Beats = [];
 
     window.SONGS = [{
+      'name': 'Move Your Feet',
+      'artist': 'Junior Senior',
+      'start_seconds': 28,
+      'bpm': 119,
+      'video_id': 'g71E3A6xu94'
+    }, {
       'name': 'Crystallize',
       'artist': 'Lindsey Sterling',
       'video_id': 'aHjpOzsQ9YI',
       'start_seconds': 27.8,
       'bpm': 140
     }, {
+      'name': 'B.Y.O.B',
+      'artist': 'System of a Down',
+      'start_seconds': 50,
+      'bpm': 101,
+      'video_id': 'zUzd9KyIDrM'
+    }, {
       'name': 'Elements',
       'artist': 'Lindsey Sterling',
       'video_id': 'sf6LD2B_kDQ',
       'start_seconds': 20,
       'bpm': 140
+    }, {
+      'name': 'Smooth Criminal',
+      'artist': 'Michael Jackson',
+      'start_seconds': 90,
+      'bpm': 118,
+      'video_id': 'h_D3VFfhvs4'
     }, {
       'name': 'Scary Monsters and Nice Sprites',
       'artist': 'Skrillex',
@@ -36,29 +54,11 @@ angular.module('tapsterApp')
       'bpm': 222,
       'video_id': 'OI3C9qQlb1U'
     }, {
-      'name': 'B.Y.O.B',
-      'artist': 'System of a Down',
-      'start_seconds': 50,
-      'bpm': 101,
-      'video_id': 'zUzd9KyIDrM'
-    }, {
-      'name': 'Move Your Feet',
-      'artist': 'Junior Senior',
-      'start_seconds': 28,
-      'bpm': 119,
-      'video_id': 'g71E3A6xu94'
-    }, {
       'name': 'Zauberkugel',
       'artist': 'Xi',
       'start_seconds': 10,
       'bpm': 153,
       'video_id': 'GiyHOjlc4tg'
-    }, {
-      'name': 'Smooth Criminal',
-      'artist': 'Michael Jackson',
-      'start_seconds': 90,
-      'bpm': 118,
-      'video_id': 'h_D3VFfhvs4'
     }];
 
     window.currentSong = window.SONGS[currentSongIndex];
@@ -80,6 +80,11 @@ angular.module('tapsterApp')
     var onDone = function() {
       $scope.showResults = true;
       $scope.trueBpm = $scope.currentSong.bpm;
+      $scope.userBpm = $scope.bpm;
+      $scope.bpmDelta = Math.abs($scope.trueBpm - $scope.userBpm);
+      if ($scope.bpmDelta <= 2) {
+        $scope.nextSongEnabled = true;
+      }
     };
 
     var getBatonPos = function() {
@@ -124,7 +129,7 @@ angular.module('tapsterApp')
 
         applyButtonEffects();
 
-        if ($scope.secondsLeft === '0' || $scope.secondsLeft === '-0') {
+        if (!$scope.showResults && $scope.secondsLeft === '0' || $scope.secondsLeft === '-0') {
           onDone();
         }
       }
@@ -157,6 +162,9 @@ angular.module('tapsterApp')
     };
 
     $scope.nextSong = function() {
+      if (currentSongIndex === window.SONGS.length - 1) {
+        window.alert('woohoo! you beat the game!');
+      }
       currentSongIndex = (currentSongIndex + 1) % window.SONGS.length;
       window.currentSong = window.SONGS[currentSongIndex];
       $scope.currentSong = window.currentSong;
@@ -191,6 +199,7 @@ angular.module('tapsterApp')
       startTime = null;
       $scope.showResults = false;
       $scope.currentBeats = 0;
+      $scope.nextSongEnabled = false;
       $scope.secondsLeft = null;
       $scope.bpm = '';
     };

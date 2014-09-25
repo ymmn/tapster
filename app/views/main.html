@@ -8,11 +8,16 @@
   <p ng-show="secondsLeft">Time Left: {{secondsLeft}}</p>
   <p ng-hide="secondsLeft">Start the music, and tap to the beat for {{TIME_LIMIT_IN_SECONDS}} seconds</p>
   <h4 ng-show="showResults">
-    Your Bpm was {{bpm}}. Song's bpm is {{trueBpm}}. <br>
-    Try a different song!
+    Your Bpm was {{userBpm}}. Song's bpm is {{trueBpm}}. You are off by {{bpmDelta}} bpm.<br>
+    <span ng-show="nextSongEnabled">
+    Nice! Try a different song
+    </span>
+    <span ng-hide="nextSongEnabled">
+    Get within 2 bpm to proceed to the next song
+    </span>
   </h4>
   <button ng-style="{'background-color': bgColor, '-webkit-filter': blur}" style="width: 100%; height: 300px; position: relative" ng-disabled="tapDisabled || !songReady" ng-click="handleNewBeat()" class="btn btn-lg btn-primary">
-    <span ng-show="songReady && !tapDisabled">Tap to the beat</span>
+    <span ng-show="songReady && !tapDisabled && !showResults">Tap to the beat</span>
     <span ng-show="showResults">{{bpm}}</span>
     <span ng-show="songReady && tapDisabled">Start the music</span>
     <span ng-hide="songReady">Loading Song</span>
@@ -20,8 +25,12 @@
   <br>
   <br>
   <button ng-click="playMusic()" ng-disabled="!songReady" class="btn-block btn">Play {{currentSong.name}} ({{currentSong.artist}})</button>
+  <div ng-show="showResults && !nextSongEnabled">
+    <br>
+    <button class="btn btn-block" ng-click="reset()">Try Again</button>
+  </div>
   <br>
-  <button ng-click="nextSong()" class="btn-block btn">Next Song</button>
+  <button ng-disabled="!nextSongEnabled" ng-click="nextSong()" class="btn-block btn">Next Song</button>
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
