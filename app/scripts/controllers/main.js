@@ -39,7 +39,7 @@ angular.module('tapsterApp')
       'name': 'B.Y.O.B',
       'artist': 'System of a Down',
       'start_seconds': 50,
-      'bpm': 155,
+      'bpm': 101,
       'video_id': 'zUzd9KyIDrM'
     }, {
       'name': 'Move Your Feet',
