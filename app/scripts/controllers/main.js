@@ -6,8 +6,10 @@ angular.module('tapsterApp')
     var player;
     var startTime = null;
     var TIME_LIMIT_IN_SECONDS = 10;
+    var NUM_BEATS_TO_USE = 12;
     var currentSongIndex = 0;
     var lastBeat = null;
+    var last10Beats = [];
 
     window.SONGS = [{
       'name': 'Crystallize',
@@ -65,7 +67,12 @@ angular.module('tapsterApp')
 
     var calculateUserBpm = function() {
       var now = new Date();
-      var miliseconds = now.getTime() - startTime.getTime();
+      if (last10Beats.unshift(now) > NUM_BEATS_TO_USE) {
+        last10Beats.pop();
+      }
+
+      var firstBeat = last10Beats[last10Beats.length - 1];
+      var miliseconds = now.getTime() - firstBeat.getTime();
       var minutes = miliseconds / 60000.0;
       return ($scope.currentBeats - 1) / minutes;
     };
@@ -163,7 +170,7 @@ angular.module('tapsterApp')
     };
 
     $scope.handleNewBeat = function() {
-      $scope.currentBeats += 1;
+      $scope.currentBeats = Math.min($scope.currentBeats + 1, NUM_BEATS_TO_USE);
       if ($scope.currentBeats === 1) {
         startTime = new Date();
         tick();
@@ -197,7 +204,6 @@ angular.module('tapsterApp')
     window.onPlayerReady = function() {
       player.seekTo($scope.currentSong.start_seconds);
       $scope.songReady = true;
-      console.log('ready');
     };
 
   });
